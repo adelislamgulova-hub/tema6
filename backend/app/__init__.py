@@ -63,7 +63,7 @@ def create_app(overrides=None):
     @app.after_request
     def headers(r):
         r.headers.setdefault("X-Content-Type-Options", "nosniff")
-        r.headers.setdefault("Referrer-Policy", "same-origin")
+        r.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
         return r
 
     # статика: в dev фронтенд раздаёт Flask, на проде - nginx

@@ -34,7 +34,8 @@ export async function createMap(el, center, { onTap } = {}) {
   await loadScript("https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js");
   const map = L.map(el, { zoomControl: false }).setView(center, 15);
   L.control.zoom({ position: "bottomright" }).addTo(map);
-  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "© OpenStreetMap" }).addTo(map);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "© OpenStreetMap", referrerPolicy: "origin" }).addTo(map);
+  setTimeout(() => map.invalidateSize(), 300);   // пересчёт размера после загрузки стилей
   let layer = L.layerGroup().addTo(map), me = null, pin = null;
   if (onTap) map.on("click", (e) => onTap([e.latlng.lat, e.latlng.lng]));
   return {

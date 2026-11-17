@@ -83,7 +83,7 @@ async function mapScreen() {
   let timer; $("#q").oninput = (e) => { S.q = e.target.value; clearTimeout(timer); timer = setTimeout(load, 350); };
   $("#when").onclick = () => timeSheet(() => { label(); load(); });
   $("#filters").onclick = () => filterSheet(load);
-  $("#locate").onclick = locate;
+  $("#locate").onclick = () => locate(false);
   async function load() {
     const p = new URLSearchParams({ city_id: c0.id });
     const f = S.filters;
@@ -98,11 +98,11 @@ async function mapScreen() {
     S.map.setMarkers(S.places, openPlace);
     if (S.q && S.places[0]) S.map.setCenter([S.places[0].lat, S.places[0].lon]);
   }
-  function locate() {
+  function locate(silent) {
     navigator.geolocation?.getCurrentPosition((pos) => { S.me = [pos.coords.latitude, pos.coords.longitude]; S.map.setMe(S.me); S.map.setCenter(S.me, 16); load(); },
-      () => toast(t("map.locate_fail")), { enableHighAccuracy: true, timeout: 8000 });
+      () => silent || toast(t("map.locate_fail")), { enableHighAccuracy: true, timeout: 8000 });
   }
-  if (!S.me) locate();   // сразу показываем «себя» и ближайшие парковки
+  if (!S.me) locate(true);   // сразу показываем «себя» и ближайшие парковки
   await load();
 }
 const durLabel = (m) => (m % 60 ? `${Math.floor(m / 60) ? Math.floor(m / 60) + " " + t("common.hour") + " " : ""}${m % 60} ${t("common.min")}` : `${m / 60} ${t("common.hour")}`);
